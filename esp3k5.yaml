@@ -1,0 +1,114 @@
+esphome:
+  name: esp3k5
+  platform: ESP8266
+  board: esp01_1m
+  includes:
+    - custom_esp3k5.h
+
+# Enable logging
+logger:
+  baud_rate: 0    # disable uart logger
+  
+# Enable Home Assistant API
+api:
+
+ota:
+  password: "9aab604d5ff05464801f162a5ef8d6b5"
+
+wifi:
+  ssid: !secret AP_SSID
+  password: !secret AP_PW
+
+  # Enable fallback hotspot (captive portal) in case wifi connection fails
+  ap:
+    ssid: "ESP_FH Solar-Inverter"   # ESPHome Fallback Hotspot
+    password: !secret FH_PW
+
+captive_portal:
+
+
+uart:
+  id: uart_bus
+  tx_pin: GPIO01
+  rx_pin: GPIO03
+  baud_rate: 9600
+
+sensor:
+  - platform: custom
+    lambda: |-
+      auto esp3k5 = new custom_esp3k5(id(uart_bus), 10000);
+      App.register_component(esp3k5);
+      return { esp3k5->espUptime, esp3k5->solarVoltage1, esp3k5->solarCurrent, esp3k5->solarVoltage2, esp3k5->lineVoltage, esp3k5->lineCurrent, esp3k5->temperature, esp3k5->energyToday, esp3k5->energyTotal, esp3k5->faultCode, esp3k5->runStatus, esp3k5->frequency, esp3k5->operationTime, esp3k5->powerFactor, esp3k5->dspVersion };
+    sensors:
+    - name: "ESP Uptime"
+      icon: "mdi:timer-outline"
+      unit_of_measurement: "min"
+      
+    - name: "ESP3K5 Panel 1 Voltage"
+      device_class: "voltage"
+      unit_of_measurement: "v"
+      accuracy_decimals: 1
+      
+    - name: "ESP3K5 Panel Current"
+      device_class: "current"
+      unit_of_measurement: "A"
+      accuracy_decimals: 1
+      
+    - name: "ESP3K5 Panel 2 Voltage"
+      device_class: "voltage"
+      unit_of_measurement: "v"
+      accuracy_decimals: 1
+      
+    - name: "ESP3K5 Line Voltage"
+      device_class: "voltage"
+      unit_of_measurement: "v"
+      accuracy_decimals: 1
+      
+    - name: "ESP3K5 Line Current"
+      device_class: "current"
+      unit_of_measurement: "A"
+      accuracy_decimals: 1
+      
+    - name: "ESP3K5 Temperature"
+      device_class: "temperature"
+      unit_of_measurement: "°C"
+      accuracy_decimals: 1
+      
+    - name: "ESP3K5 Energy Today"
+      device_class: energy
+      state_class: measurement
+      unit_of_measurement: "kWh"
+      last_reset_type: auto
+      accuracy_decimals: 2
+      
+    - name: "ESP3K5 Energy Total"
+      device_class: energy
+      state_class: measurement
+      unit_of_measurement: "kWh"
+      last_reset_type: auto
+      accuracy_decimals: 0
+      
+    - name: "ESP3K5 Fault Code"
+      icon: "mdi:alert-circle"
+    
+    - name: "ESP3K5 Run Status"
+      icon: "mdi:power"
+    
+    - name: "ESP3K5 Frequency"
+      icon: "mdi:sine-wave"
+      unit_of_measurement: "Hz"
+      accuracy_decimals: 1
+      
+    - name: "ESP3K5 Operation Time"
+      icon: "mdi:timer-outline"
+      unit_of_measurement: "min"
+      accuracy_decimals: 0
+    
+    - name: "ESP3K5 Power Factor"
+      device_class: "power_factor"
+      accuracy_decimals: 2
+      
+    - name: "ESP3K5 DSP Version"
+      icon: "mdi:list-status"
+      accuracy_decimals: 2
+  
