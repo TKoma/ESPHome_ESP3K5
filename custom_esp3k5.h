@@ -29,7 +29,7 @@
 // 12.LineCurrent_MSB
 // 13.Temperature_LSB				(/10) "°C"
 // 14.Temperature_MSB
-// 15.EnergyToday_LSB				(/10) "kWh"
+// 15.EnergyToday_LSB				(/100) "kWh"
 // 16.EnergyToday_MSB
 // 17.EnergyTotal_byte0				"kWh"
 // 18.EnergyTotal_byte1
@@ -168,7 +168,7 @@ class custom_esp3k5 : public PollingComponent, public UARTDevice, public Sensor 
 						
 						// energyToday		15:16
 						if (energyToday != nullptr)
-							energyToday->publish_state(b2f(recv[15], recv[16]) / 10);
+							energyToday->publish_state(b2f(recv[15], recv[16]) / 100);
 						
 						// energyTotal		17:19
 						temp = recv[19];
