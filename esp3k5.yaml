@@ -76,16 +76,14 @@ sensor:
       
     - name: "ESP3K5 Energy Today"
       device_class: energy
-      state_class: measurement
+      state_class: total_increasing
       unit_of_measurement: "kWh"
-      last_reset_type: auto
       accuracy_decimals: 2
       
     - name: "ESP3K5 Energy Total"
       device_class: energy
-      state_class: measurement
+      state_class: total_increasing
       unit_of_measurement: "kWh"
-      last_reset_type: auto
       accuracy_decimals: 0
       
     - name: "ESP3K5 Fault Code"
